@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="tr" data-theme="sepia">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Meal</title>
+<meta name="theme-color" content="#1f4d3a">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Meal">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;1,7..72,400&family=Amiri+Quran&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f4ecd8;--paper:#f8f1e1;--ink:#3b3024;--mute:#86775f;--line:#e2d5b8;--accent:#9a5b1f;--card:#fbf6ea;
+  --hl-yellow:rgba(255,206,0,.42);--hl-green:rgba(90,190,110,.34);--hl-blue:rgba(80,150,255,.30);--hl-pink:rgba(240,90,160,.30);
+  --fs:20px;--lh:1.75;--ar:26px;--serif:'Literata',Georgia,serif;--sans:'Inter',system-ui,sans-serif;--body:var(--serif);
+}
+[data-theme=light]{--bg:#ffffff;--paper:#ffffff;--ink:#1f1f1f;--mute:#777;--line:#e6e6e6;--accent:#1d5fa8;--card:#f6f6f4}
+[data-theme=dark]{--bg:#121212;--paper:#161616;--ink:#d9d2c5;--mute:#8a847a;--line:#2b2b2b;--accent:#e0a35c;--card:#1d1d1d;
+  --hl-yellow:rgba(230,190,0,.30);--hl-green:rgba(80,180,100,.30);--hl-blue:rgba(80,140,240,.32);--hl-pink:rgba(230,90,150,.30)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans)}
+body{padding-bottom:72px}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;padding:0}
+input,textarea,select{font:inherit;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 12px;width:100%}
+textarea{min-height:110px;resize:vertical;font-family:var(--serif);font-size:16px;line-height:1.5}
+#view{max-width:720px;margin:0 auto}
+.pad{padding:16px}
+h1{font-family:var(--serif);font-weight:600;font-size:26px;margin:8px 0 14px}
+h2{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--mute);margin:24px 0 10px;font-weight:600}
+.muted{color:var(--mute)}
+.small{font-size:13px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:10px 14px;border-radius:10px;border:1px solid var(--line);background:var(--card);font-weight:500;font-size:14px}
+.btn.pri{background:var(--accent);border-color:var(--accent);color:#fff}
+[data-theme=dark] .btn.pri{color:#1a1208}
+.btn.danger{color:#c0392b}
+.row{display:flex;gap:8px;align-items:center}
+.wrap{flex-wrap:wrap}
+.grow{flex:1}
+.bar{height:6px;background:var(--line);border-radius:6px;overflow:hidden}
+.bar>i{display:block;height:100%;background:var(--accent);border-radius:6px}
+/* nav */
+nav.tabs{position:fixed;left:0;right:0;bottom:0;height:64px;background:var(--paper);border-top:1px solid var(--line);display:flex;z-index:30;padding-bottom:env(safe-area-inset-bottom)}
+nav.tabs button{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:11px;color:var(--mute)}
+nav.tabs button.on{color:var(--accent);font-weight:600}
+nav.tabs svg{width:22px;height:22px}
+/* library */
+.cont{display:flex;gap:14px;align-items:center}
+.cont b{font-family:var(--serif);font-size:19px;font-weight:600}
+.slist{list-style:none;margin:0;padding:0}
+.slist li{display:flex;align-items:center;gap:12px;padding:12px 4px;border-bottom:1px solid var(--line);cursor:pointer}
+.snum{width:34px;height:34px;flex:none;border-radius:50%;display:grid;place-items:center;font-size:13px;font-weight:600;position:relative}
+.snum svg{position:absolute;inset:0}
+.sname{font-family:var(--serif);font-size:17px}
+.sar{font-family:'Amiri',serif;font-size:20px;color:var(--mute)}
+/* reader */
+.rhead{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:1px solid var(--line);padding:10px 16px 0}
+.rhead .t{display:flex;align-items:center;gap:10px;padding-bottom:8px}
+.rhead .t b{font-family:var(--serif);font-size:17px;font-weight:600}
+.rprog{height:3px;background:var(--line);margin:0 -16px}
+.rprog i{display:block;height:100%;background:var(--accent);width:0}
+.iconbtn{width:36px;height:36px;display:grid;place-items:center;border-radius:10px}
+.iconbtn svg{width:20px;height:20px}
+.page{background:var(--paper);padding:8px 20px 40px;min-height:80vh}
+.stitle{text-align:center;padding:26px 0 10px}
+.stitle .a{font-family:'Amiri',serif;font-size:34px}
+.stitle .n{font-family:var(--serif);font-size:24px;font-weight:600;margin-top:2px}
+.stitle .m{font-size:13px;color:var(--mute);margin-top:4px}
+.besm{text-align:center;font-family:'Amiri Quran',serif;font-size:26px;margin:14px 0 4px}
+.besmtr{text-align:center;font-family:var(--serif);font-style:italic;color:var(--mute);margin-bottom:18px}
+.ayah{padding:10px 0 10px 12px;margin-left:-12px;border-left:3px solid transparent;scroll-margin-top:80px;cursor:pointer}
+.ayah.has-hl{border-left-color:var(--bar)}
+.ayah.flash{animation:fl 1.6s ease}
+@keyframes fl{0%{background:var(--hl-yellow)}100%{background:transparent}}
+.ar{font-family:'Amiri Quran','Amiri',serif;font-size:var(--ar);line-height:2;text-align:right;margin-bottom:6px}
+.ok{font-family:var(--serif);font-style:italic;font-size:calc(var(--fs)*.9);line-height:1.6;color:var(--accent);margin:0 0 6px}
+.arn{font-size:.8em;color:var(--accent)}
+.tr{font-family:var(--body);font-size:var(--fs);line-height:var(--lh);margin:0}
+.tr.sec{font-size:calc(var(--fs)*.84);color:var(--mute);margin-top:6px}
+[data-theme=dark] .tr.sec{color:#a89f90}
+.vn{font-family:var(--sans);font-size:.62em;font-weight:600;color:var(--accent);vertical-align:.25em;margin-right:6px}
+.ml{font-family:var(--sans);font-size:.7em;font-weight:600;letter-spacing:.03em;color:var(--accent);margin-right:6px;text-transform:uppercase}
+mark.hl{color:inherit;border-radius:3px;padding:1px 0;box-decoration-break:clone;-webkit-box-decoration-break:clone}
+mark.c-yellow{background:var(--hl-yellow)} mark.c-green{background:var(--hl-green)} mark.c-blue{background:var(--hl-blue)} mark.c-pink{background:var(--hl-pink)}
+mark.c-none{background:transparent;border-bottom:2px dotted var(--accent);border-radius:0}
+.vnote{margin:8px 0 2px;padding:8px 12px;border-radius:10px;background:var(--card);border:1px solid var(--line);font-size:14px;line-height:1.5;font-family:var(--serif);font-style:italic}
+.vnote .tg{font-style:normal}
+.tag{display:inline-block;font-family:var(--sans);font-style:normal;font-size:12px;padding:2px 8px;border-radius:20px;background:var(--line);margin:2px 4px 0 0}
+.snav{display:flex;gap:10px;margin-top:30px}
+.snav .btn{flex:1}
+/* sheets */
+.ov{position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:50;display:flex;align-items:flex-end;justify-content:center}
+.sheet{background:var(--paper);width:100%;max-width:720px;border-radius:18px 18px 0 0;padding:18px 18px calc(22px + env(safe-area-inset-bottom));max-height:88vh;overflow:auto;animation:up .18s ease}
+@keyframes up{from{transform:translateY(30px);opacity:.6}}
+.sheet h3{margin:0 0 4px;font-family:var(--serif);font-size:19px}
+.quote{font-family:var(--serif);font-size:15px;line-height:1.55;border-left:3px solid var(--accent);padding:4px 0 4px 12px;margin:12px 0;max-height:150px;overflow:auto}
+.swatches{display:flex;gap:12px;margin:12px 0}
+.sw{width:38px;height:38px;border-radius:50%;border:2px solid var(--line);display:grid;place-items:center;font-size:12px}
+.sw.on{border-color:var(--ink);box-shadow:0 0 0 2px var(--paper) inset}
+.sw.yellow{background:#f7d330}.sw.green{background:#6cc583}.sw.blue{background:#6aa8f5}.sw.pink{background:#f07cb4}
+.sw.none{background:transparent;border-style:dashed}
+.list-btn{display:flex;align-items:center;gap:12px;width:100%;padding:13px 4px;border-bottom:1px solid var(--line);text-align:left;font-size:15px}
+.list-btn svg{width:20px;height:20px;color:var(--accent)}
+/* selection bar */
+#selbar{position:fixed;left:50%;transform:translateX(-50%);bottom:76px;z-index:40;background:var(--ink);color:var(--paper);border-radius:30px;padding:8px 10px;display:none;gap:8px;align-items:center;box-shadow:0 6px 20px rgba(0,0,0,.25)}
+#selbar.on{display:flex}
+#selbar .sw{width:30px;height:30px;border-color:transparent}
+#selbar .nb{padding:6px 12px;border-radius:20px;background:rgba(255,255,255,.15);font-size:13px;font-weight:600;color:var(--paper)}
+/* chips */
+.chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none}
+.chip{flex:none;padding:7px 12px;border-radius:20px;border:1px solid var(--line);background:var(--card);font-size:13px;white-space:nowrap;display:inline-flex;align-items:center;gap:6px}
+.chip.on{background:var(--accent);border-color:var(--accent);color:#fff}
+[data-theme=dark] .chip.on{color:#1a1208}
+.dot{width:10px;height:10px;border-radius:50%;display:inline-block}
+/* notes list */
+.note-item{padding:14px 0;border-bottom:1px solid var(--line);cursor:pointer}
+.note-item .ref{font-size:12px;font-weight:600;color:var(--accent);letter-spacing:.03em;display:flex;gap:8px;align-items:center}
+.note-item .ex{font-family:var(--serif);font-size:16px;line-height:1.55;margin:6px 0}
+.note-item .nt{font-size:14px;line-height:1.5;background:var(--card);border-radius:8px;padding:8px 10px;border:1px solid var(--line)}
+.res{padding:12px 0;border-bottom:1px solid var(--line);cursor:pointer}
+.res .ex{font-family:var(--serif);font-size:15.5px;line-height:1.55;margin-top:4px}
+.res b{background:var(--hl-yellow);font-weight:inherit;border-radius:2px}
+.seg{display:flex;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.seg button{flex:1;padding:9px 6px;font-size:14px;background:var(--card)}
+.seg button.on{background:var(--accent);color:#fff}
+[data-theme=dark] .seg button.on{color:#1a1208}
+.setrow{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
+.switch{width:46px;height:28px;border-radius:20px;background:var(--line);position:relative;flex:none;transition:.2s}
+.switch::after{content:'';position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:#fff;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.switch.on{background:var(--accent)}.switch.on::after{left:21px}
+.stepper{display:flex;align-items:center;gap:6px}
+.stepper button{width:36px;height:36px;border:1px solid var(--line);border-radius:10px;background:var(--card);font-size:18px}
+.stepper span{min-width:44px;text-align:center;font-weight:600}
+.mealrow{display:flex;align-items:center;gap:10px;padding:11px 0;border-bottom:1px solid var(--line)}
+.cb{width:22px;height:22px;border-radius:6px;border:2px solid var(--mute);display:grid;place-items:center;flex:none}
+.cb.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.loading{padding:60px 20px;text-align:center;color:var(--mute)}
+#toast{position:fixed;left:50%;bottom:84px;transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:10px 16px;border-radius:10px;font-size:14px;z-index:60;opacity:0;transition:.25s;pointer-events:none;max-width:90vw;text-align:center}
+#toast.on{opacity:1}
+.empty{text-align:center;padding:40px 10px;color:var(--mute);line-height:1.6}
+</style>
+</head>
+<body>
+<main id="view"><div class="loading">Yükleniyor…</div></main>
+<div id="selbar"></div>
+<div id="toast"></div>
+<nav class="tabs" id="tabs">
+  <button data-tab="library"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19.5V5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2.5zM4 19.5A2 2 0 0 1 6 18h13"/></svg>Kütüphane</button>
+  <button data-tab="reader"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 5h7a3 3 0 0 1 3 3v12a2 2 0 0 0-2-2H2zM22 5h-7a3 3 0 0 0-3 3v12a2 2 0 0 1 2-2h8z"/></svg>Oku</button>
+  <button data-tab="notes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>Notlarım</button>
+  <button data-tab="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>Ara</button>
+  <button data-tab="settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg>Ayarlar</button>
+</nav>
+<script>
+const MEALS={diyanet:'Diyanet İşleri',elmalili:'Elmalılı Hamdi Yazır',ates:'Süleyman Ateş',bulac:'Ali Bulaç'};
+const MS={diyanet:'Diyanet',elmalili:'Elmalılı',ates:'S. Ateş',bulac:'A. Bulaç'};
+const COLORS=['yellow','green','blue','pink'];
+const CNAME={yellow:'Sarı',green:'Yeşil',blue:'Mavi',pink:'Pembe',none:'Renksiz'};
+const TOTAL=6236, KEY='mealOkuyucu.v1';
+const $=s=>document.querySelector(s), view=$('#view');
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const arDig=n=>String(n).replace(/\d/g,d=>'٠١٢٣٤٥٦٧٨٩'[d]);
+let META=null, OFFS=[];
+const PROM={}, D={};
+function ensure(n){ if(!PROM[n]) PROM[n]=fetch('data/'+n+'.json').then(r=>{if(!r.ok)throw new Error(n);return r.json()}).then(j=>(D[n]=j)); return PROM[n]; }
+
+/* ---------- state ---------- */
+let S={settings:{meals:['diyanet'],arabic:false,translit:false,theme:'sepia',fs:20,lh:1.75,ar:26,family:'serif'},hl:[],read:'',last:{s:1,v:1},hatim:0,lastBackup:null,sort:'mushaf'};
+let READ=new Uint8Array(Math.ceil(TOTAL/8));
+const b64e=u=>{let s='';u.forEach(b=>s+=String.fromCharCode(b));return btoa(s)};
+const b64d=s=>{try{const t=atob(s),u=new Uint8Array(Math.ceil(TOTAL/8));for(let i=0;i<t.length&&i<u.length;i++)u[i]=t.charCodeAt(i);return u}catch(e){return new Uint8Array(Math.ceil(TOTAL/8))}};
+function load(){try{const t=localStorage.getItem(KEY);if(t){const o=JSON.parse(t);S={...S,...o,settings:{...S.settings,...(o.settings||{})}}}}catch(e){} if(S.read)READ=b64d(S.read)}
+let storageOK=true;
+function save(){S.read=b64e(READ);try{localStorage.setItem(KEY,JSON.stringify(S));storageOK=true}catch(e){if(storageOK)toast('Uyarı: bu tarayıcı kayıt yapmıyor, yedek al.');storageOK=false}}
+let svT;function saveSoon(){clearTimeout(svT);svT=setTimeout(save,500)}
+const gi=(s,v)=>OFFS[s-1]+v-1;
+const isRead=(s,v)=>READ[gi(s,v)>>3]&(1<<(gi(s,v)&7));
+function markRead(s,v){const i=gi(s,v);if(!(READ[i>>3]&(1<<(i&7)))){READ[i>>3]|=1<<(i&7);saveSoon()}}
+function countRead(s){let c=0;if(s){for(let v=1;v<=META[s-1][3];v++)if(isRead(s,v))c++;return c}for(let i=0;i<TOTAL;i++)if(READ[i>>3]&(1<<(i&7)))c++;return c}
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+const hlFor=(s,v)=>S.hl.filter(h=>h.s===s&&h.v===v);
+const ref=(s,v)=>`${META[s-1][0]} ${v}`;
+
+function applyLook(){const st=S.settings,r=document.documentElement.style;document.documentElement.dataset.theme=st.theme;r.setProperty('--fs',st.fs+'px');r.setProperty('--lh',st.lh);r.setProperty('--ar',st.ar+'px');r.setProperty('--body',st.family==='sans'?'var(--sans)':'var(--serif)')}
+let tT;function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(tT);tT=setTimeout(()=>t.classList.remove('on'),2200)}
+async function copy(txt){try{await navigator.clipboard.writeText(txt);toast('Panoya kopyalandı')}catch(e){toast('Kopyalanamadı')}}
+
+/* ---------- tabs ---------- */
+let tab='library';
+function setTab(t){tab=t;document.querySelectorAll('#tabs button').forEach(b=>b.classList.toggle('on',b.dataset.tab===t));hideSel();window.scrollTo(0,0)}
+$('#tabs').onclick=e=>{const b=e.target.closest('button');if(!b)return;const t=b.dataset.tab;
+  if(t==='library')renderLibrary();else if(t==='reader')openReader(S.last.s,S.last.v);else if(t==='notes')renderNotes();else if(t==='search')renderSearch();else renderSettings()};
+
+/* ---------- library ---------- */
+function ring(p){const c=2*Math.PI*15;return `<svg viewBox="0 0 34 34"><circle cx="17" cy="17" r="15" fill="none" stroke="var(--line)" stroke-width="2.5"/><circle cx="17" cy="17" r="15" fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-dasharray="${c*p} ${c}" transform="rotate(-90 17 17)" stroke-linecap="round"/></svg>`}
+function renderLibrary(){
+  setTab('library');
+  const tot=countRead(),pct=tot/TOTAL*100, L=S.last;
+  let h=`<div class="pad"><h1>Kur'an-ı Kerîm Meali</h1>
+  <div class="card cont" id="contBtn" style="cursor:pointer"><div class="grow"><div class="small muted">Okumaya devam et</div><b>${esc(META[L.s-1][0])} Sûresi, ${L.v}. ayet</b></div><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 6 6 6-6 6"/></svg></div>
+  <div class="card" style="margin-top:10px"><div class="row"><div class="grow small"><b>Hatim ilerlemesi</b></div><div class="small muted">%${pct<10?pct.toFixed(1):Math.floor(pct)} · ${tot}/${TOTAL} ayet</div></div><div class="bar" style="margin-top:8px"><i style="width:${pct}%"></i></div>
+  <div class="small muted" style="margin-top:8px">${S.hatim?`Tamamlanan hatim: ${S.hatim} · `:''}${S.hl.length} vurgu, ${S.hl.filter(x=>x.note).length} not</div></div>
+  <div class="row" style="margin-top:14px"><input id="sf" placeholder="Sûre ara veya ayete git (ör. 2:255)" autocomplete="off"><button class="btn" id="goBtn">Git</button></div>
+  <h2>Sûreler</h2><ul class="slist" id="sl"></ul></div>`;
+  view.innerHTML=h;
+  $('#contBtn').onclick=()=>openReader(L.s,L.v,true);
+  const draw=q=>{const n=norm(q||'');$('#sl').innerHTML=META.map((m,i)=>{if(n&&!norm(m[0]).includes(n)&&String(i+1)!==q.trim())return '';const r=countRead(i+1)/m[3];
+    return `<li data-s="${i+1}"><div class="snum">${ring(r)}<span>${i+1}</span></div><div class="grow"><div class="sname">${esc(m[0])}</div><div class="small muted">${m[2]==='m'?'Mekkî':'Medenî'} · ${m[3]} ayet${r>0?` · %${Math.floor(r*100)} okundu`:''}</div></div><div class="sar">${m[1]}</div></li>`}).join('')};
+  draw();
+  $('#sf').oninput=e=>draw(e.target.value);
+  const go=()=>{const v=$('#sf').value.trim(),m=v.match(/^(\d{1,3})\s*[:.\s]\s*(\d{1,3})$/);if(m){const s=+m[1],a=+m[2];if(s>=1&&s<=114&&a>=1&&a<=META[s-1][3])return openReader(s,a,true);return toast('Böyle bir ayet yok')}
+    const f=$('#sl li');if(f)openReader(+f.dataset.s,1)};
+  $('#goBtn').onclick=go;$('#sf').onkeydown=e=>{if(e.key==='Enter')go()};
+  $('#sl').onclick=e=>{const li=e.target.closest('li');if(li){const s=+li.dataset.s;openReader(s,S.last.s===s?S.last.v:1)}};
+}
+
+/* ---------- reader ---------- */
+let curS=1, io=null;
+function markup(t,hls){
+  if(!hls.length)return esc(t);
+  const P=new Set([0,t.length]);hls.forEach(h=>{P.add(Math.min(h.a,t.length));P.add(Math.min(h.b,t.length))});
+  const A=[...P].sort((x,y)=>x-y);let o='';
+  for(let i=0;i<A.length-1;i++){const a=A[i],b=A[i+1];if(a>=b)continue;let top=null;for(const h of hls)if(h.a<=a&&h.b>=b&&(!top||h.c>top.c))top=h;
+    o+=top?`<mark class="hl c-${top.color||'none'}" data-id="${top.id}">${esc(t.slice(a,b))}</mark>`:esc(t.slice(a,b))}
+  return o;
+}
+function ayahHTML(s,v){
+  const st=S.settings,hls=hlFor(s,v);
+  const col=(hls.find(h=>h.color)||{}).color;
+  let o=`<div class="ayah${hls.length?' has-hl':''}" id="a${s}-${v}" data-s="${s}" data-v="${v}" style="--bar:${col?`var(--hl-${col})`:'var(--accent)'}">`;
+  if(st.arabic&&D.ar)o+=`<div class="ar" dir="rtl" lang="ar">${esc(D.ar[s-1][v-1])} <span class="arn">﴿${arDig(v)}﴾</span></div>`;
+  if(st.translit&&D.okunus)o+=`<p class="ok">${esc(D.okunus[s-1][v-1])}</p>`;
+  st.meals.forEach((k,i)=>{o+=`<p class="tr${i?' sec':''}">${i?`<span class="ml">${MS[k]}</span>`:`<span class="vn">${v}</span>`}<span class="tx" data-meal="${k}">${markup(D[k][s-1][v-1],hls.filter(h=>h.meal===k))}</span></p>`});
+  hls.filter(h=>h.note||(h.tags&&h.tags.length)).forEach(h=>{o+=`<div class="vnote" data-id="${h.id}">${h.note?esc(h.note):''}${h.tags&&h.tags.length?`<div class="tg">${h.tags.map(t=>`<span class="tag">#${esc(t)}</span>`).join('')}</div>`:''}</div>`});
+  return o+'</div>';
+}
+async function openReader(s,v=1,flash=false){
+  setTab('reader');curS=s;
+  view.innerHTML='<div class="loading">Meal yükleniyor…</div>';
+  const need=[...S.settings.meals];if(S.settings.arabic)need.push('ar');if(S.settings.translit)need.push('okunus');
+  try{await Promise.all(need.map(ensure))}catch(e){view.innerHTML='<div class="loading">Veri yüklenemedi. Bağlantını kontrol edip tekrar dene.</div>';return}
+  if(tab!=='reader'||curS!==s)return;
+  const m=META[s-1];
+  let h=`<header class="rhead"><div class="t"><button class="iconbtn" id="toLib" aria-label="Kütüphane"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 6l-6 6 6 6"/></svg></button><b class="grow">${esc(m[0])} Sûresi</b><span class="small muted" id="rpos"></span><button class="iconbtn" id="jump" aria-label="Ayete git"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h10M4 18h6"/></svg></button></div><div class="rprog"><i id="rbar"></i></div></header>
+  <div class="page"><div class="stitle"><div class="a">${m[1]}</div><div class="n">${esc(m[0])} Sûresi</div><div class="m">${s}. sûre · ${m[2]==='m'?'Mekkî':'Medenî'} · ${m[3]} ayet</div></div>`;
+  if(s!==1&&s!==9)h+=`${S.settings.arabic?'<div class="besm">بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</div>':''}${S.settings.translit?'<p class="ok" style="text-align:center">Bismillâhir rahmânir rahîm</p>':''}<div class="besmtr">Rahmân ve Rahîm olan Allah'ın adıyla</div>`;
+  let body='';for(let i=1;i<=m[3];i++)body+=ayahHTML(s,i);
+  h+=`<div id="ayahs">${body}</div><div class="snav">${s>1?`<button class="btn" data-go="${s-1}">‹ ${esc(META[s-2][0])}</button>`:''}${s<114?`<button class="btn pri" data-go="${s+1}">${esc(META[s][0])} ›</button>`:''}</div></div>`;
+  view.innerHTML=h;
+  $('#toLib').onclick=renderLibrary;
+  $('#jump').onclick=()=>jumpSheet(s);
+  view.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>openReader(+b.dataset.go,1));
+  $('#ayahs').onclick=onAyahClick;
+  if(io)io.disconnect();
+  io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){const a=e.target;markRead(+a.dataset.s,+a.dataset.v)}}),{threshold:.6});
+  view.querySelectorAll('.ayah').forEach(a=>io.observe(a));
+  const el=document.getElementById(`a${s}-${v}`);
+  if(v>1&&el){el.scrollIntoView({block:'start'})}else window.scrollTo(0,0);
+  if(flash&&el&&v>1){el.classList.add('flash')}
+  S.last={s,v};saveSoon();onScroll();
+}
+let scT;
+function onScroll(){if(tab!=='reader')return;const bar=$('#rbar');if(!bar)return;
+  const pg=$('#ayahs'),r=pg.getBoundingClientRect(),p=Math.min(1,Math.max(0,(-r.top+innerHeight*.5)/r.height));bar.style.width=(p*100)+'%';
+  clearTimeout(scT);scT=setTimeout(()=>{const el=document.elementFromPoint(innerWidth/2,110);const a=el&&el.closest('.ayah');if(a){S.last={s:+a.dataset.s,v:+a.dataset.v};const rp=$('#rpos');if(rp)rp.textContent=`${a.dataset.v}/${META[curS-1][3]}`;saveSoon()}},250)}
+addEventListener('scroll',onScroll,{passive:true});
+function rerenderAyah(s,v){const el=document.getElementById(`a${s}-${v}`);if(el){const w=document.createElement('div');w.innerHTML=ayahHTML(s,v);const n=w.firstChild;el.replaceWith(n);io&&io.observe(n)}}
+function onAyahClick(e){
+  const sel=getSelection();if(sel&&!sel.isCollapsed)return;
+  const mk=e.target.closest('mark.hl,.vnote');if(mk)return editSheet(mk.dataset.id);
+  const a=e.target.closest('.ayah');if(a)verseSheet(+a.dataset.s,+a.dataset.v);
+}
+
+/* ---------- selection highlight ---------- */
+let pending=null;
+function offsetIn(el,node,off){const r=document.createRange();r.setStart(el,0);r.setEnd(node,off);return r.toString().length}
+let selT;
+document.addEventListener('selectionchange',()=>{clearTimeout(selT);selT=setTimeout(checkSel,180)});
+function checkSel(){
+  if(tab!=='reader')return hideSel();
+  const sel=getSelection();if(!sel.rangeCount||sel.isCollapsed){if(!barDown)hideSel();return}
+  const R=sel.getRangeAt(0),parts=[];
+  view.querySelectorAll('#ayahs .tx').forEach(tx=>{if(!R.intersectsNode(tx))return;const len=tx.textContent.length;
+    const a=tx.contains(R.startContainer)?offsetIn(tx,R.startContainer,R.startOffset):0;
+    const b=tx.contains(R.endContainer)?offsetIn(tx,R.endContainer,R.endOffset):len;
+    const ay=tx.closest('.ayah');if(b>a&&tx.textContent.slice(a,b).trim())parts.push({s:+ay.dataset.s,v:+ay.dataset.v,meal:tx.dataset.meal,a,b})});
+  if(!parts.length)return hideSel();
+  pending=parts;showSel();
+}
+let barDown=false;
+function showSel(){const b=$('#selbar');b.innerHTML=COLORS.map(c=>`<button class="sw ${c}" data-c="${c}" aria-label="${CNAME[c]}"></button>`).join('')+`<button class="nb" data-c="note">Not</button>`;b.classList.add('on')}
+function hideSel(){$('#selbar').classList.remove('on');pending=null}
+$('#selbar').addEventListener('pointerdown',e=>{barDown=true;e.preventDefault();const t=e.target.closest('[data-c]');if(!t||!pending)return;
+  const c=t.dataset.c,grp=uid();let first=null;
+  pending.forEach(p=>{const h={id:uid(),grp,s:p.s,v:p.v,meal:p.meal,a:p.a,b:p.b,color:c==='note'?'yellow':c,note:'',tags:[],c:Date.now()};S.hl.push(h);first=first||h});
+  const touched=[...new Set(pending.map(p=>p.s+'-'+p.v))];
+  getSelection().removeAllRanges();hideSel();save();
+  touched.forEach(k=>{const [s,v]=k.split('-').map(Number);rerenderAyah(s,v)});
+  if(c==='note')editSheet(first.id);else toast('Vurgulandı');
+  setTimeout(()=>barDown=false,300);
+});
+document.addEventListener('pointerup',()=>setTimeout(()=>barDown=false,300));
+
+/* ---------- sheets ---------- */
+function sheet(html,onMount){closeSheet();const ov=document.createElement('div');ov.className='ov';ov.id='ov';ov.innerHTML=`<div class="sheet">${html}</div>`;ov.onclick=e=>{if(e.target===ov)closeSheet()};document.body.appendChild(ov);onMount&&onMount(ov.firstChild);return ov}
+function closeSheet(){const o=$('#ov');if(o)o.remove()}
+const IC={note:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>',copy:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>',pin:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 3h12v18l-6-4-6 4z"/></svg>'};
+function verseSheet(s,v){
+  const k=S.settings.meals[0],txt=D[k][s-1][v-1],ex=hlFor(s,v);
+  const whole=ex.find(h=>h.meal===k&&h.a===0&&h.b>=txt.length);
+  sheet(`<h3>${esc(ref(s,v))}</h3><div class="small muted">Tüm ayeti vurgula (${MS[k]})</div>
+  <div class="swatches">${COLORS.map(c=>`<button class="sw ${c}${whole&&whole.color===c?' on':''}" data-c="${c}"></button>`).join('')}${whole?`<button class="sw none" data-c="del" title="Kaldır">✕</button>`:''}</div>
+  <button class="list-btn" id="vNote">${IC.note}${whole&&whole.note?'Notu düzenle':'Not ekle'}</button>
+  <button class="list-btn" id="vCopy">${IC.copy}Ayeti kopyala</button>
+  ${ex.filter(h=>h!==whole).length?`<h2>Bu ayetteki vurgular</h2>`+ex.filter(h=>h!==whole).map(h=>`<button class="list-btn" data-id="${h.id}"><span class="dot" style="background:var(--hl-${h.color||'yellow'})"></span><span class="grow" style="font-family:var(--serif)">“${esc(D[h.meal]?D[h.meal][s-1][v-1].slice(h.a,h.b):'')}”</span></button>`).join(''):''}
+  <div class="small muted" style="margin-top:12px">İpucu: Metnin bir kısmını işaretlemek için kelimeye uzun bas ve seçimi sürükle.</div>`,el=>{
+    el.querySelectorAll('.swatches [data-c]').forEach(b=>b.onclick=()=>{const c=b.dataset.c;
+      if(c==='del'){S.hl=S.hl.filter(h=>h!==whole)}else if(whole){whole.color=c}else{S.hl.push({id:uid(),s,v,meal:k,a:0,b:txt.length,color:c,note:'',tags:[],c:Date.now()})}
+      save();rerenderAyah(s,v);closeSheet()});
+    el.querySelector('#vNote').onclick=()=>{let h=whole;if(!h){h={id:uid(),s,v,meal:k,a:0,b:txt.length,color:null,note:'',tags:[],c:Date.now()};S.hl.push(h);h._new=true}editSheet(h.id)};
+    el.querySelector('#vCopy').onclick=()=>{copy(`"${txt}" (${ref(s,v)}, ${MEALS[k]})`);closeSheet()};
+    el.querySelectorAll('.list-btn[data-id]').forEach(b=>b.onclick=()=>editSheet(b.dataset.id));
+  });
+}
+function allTags(){const m={};S.hl.forEach(h=>(h.tags||[]).forEach(t=>m[t]=(m[t]||0)+1));return Object.keys(m).sort((a,b)=>m[b]-m[a])}
+async function editSheet(id){
+  const h=S.hl.find(x=>x.id===id);if(!h)return;
+  await ensure(h.meal);
+  const txt=D[h.meal][h.s-1][h.v-1].slice(h.a,h.b);let color=h.color,tags=[...(h.tags||[])];
+  const tagChips=()=>{const all=[...new Set([...tags,...allTags()])];return all.map(t=>`<button class="chip${tags.includes(t)?' on':''}" data-t="${esc(t)}">#${esc(t)}</button>`).join('')};
+  sheet(`<h3>${esc(ref(h.s,h.v))} <span class="small muted">· ${MS[h.meal]}</span></h3><div class="quote">${esc(txt)}</div>
+  <div class="swatches">${[...COLORS,'none'].map(c=>`<button class="sw ${c}${(color||'none')===c?' on':''}" data-c="${c}" title="${CNAME[c]}">${c==='none'?'—':''}</button>`).join('')}</div>
+  <textarea id="nt" placeholder="Notunu yaz…">${esc(h.note||'')}</textarea>
+  <div class="row" style="margin-top:10px"><input id="tg" placeholder="Etiket ekle (ör. sabır, dua)" autocomplete="off"><button class="btn" id="tgAdd">Ekle</button></div>
+  <div class="chips wrap" id="tgs" style="margin-top:10px;flex-wrap:wrap">${tagChips()}</div>
+  <div class="row" style="margin-top:16px"><button class="btn danger" id="del">Sil</button><span class="grow"></span><button class="btn" id="go">Ayete git</button><button class="btn pri" id="sv">Kaydet</button></div>`,el=>{
+    el.querySelectorAll('.swatches [data-c]').forEach(b=>b.onclick=()=>{color=b.dataset.c==='none'?null:b.dataset.c;el.querySelectorAll('.swatches .sw').forEach(x=>x.classList.toggle('on',x===b))});
+    const addTag=()=>{const v=el.querySelector('#tg').value.split(',').map(x=>x.trim().replace(/^#/,'')).filter(Boolean);v.forEach(t=>{if(!tags.includes(t))tags.push(t)});el.querySelector('#tg').value='';el.querySelector('#tgs').innerHTML=tagChips()};
+    el.querySelector('#tgAdd').onclick=addTag;el.querySelector('#tg').onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();addTag()}};
+    el.querySelector('#tgs').onclick=e=>{const c=e.target.closest('[data-t]');if(!c)return;const t=c.dataset.t;tags=tags.includes(t)?tags.filter(x=>x!==t):[...tags,t];el.querySelector('#tgs').innerHTML=tagChips()};
+    const done=()=>{closeSheet();if(tab==='reader')rerenderAyah(h.s,h.v);else if(tab==='notes')drawNotes()};
+    el.querySelector('#sv').onclick=()=>{if(el.querySelector('#tg').value.trim())addTag();h.color=color;h.note=el.querySelector('#nt').value.trim();h.tags=tags;h.u=Date.now();delete h._new;
+      if(!h.color&&!h.note&&!h.tags.length)S.hl=S.hl.filter(x=>x!==h);save();done();toast('Kaydedildi')};
+    el.querySelector('#del').onclick=()=>{S.hl=S.hl.filter(x=>x!==h);save();done();toast('Silindi')};
+    el.querySelector('#go').onclick=()=>{if(h._new)S.hl=S.hl.filter(x=>x!==h);closeSheet();openReader(h.s,h.v,true)};
+    el.parentNode.onclick=e=>{if(e.target===el.parentNode){if(h._new)S.hl=S.hl.filter(x=>x!==h);closeSheet()}};
+  });
+}
+function jumpSheet(s){
+  sheet(`<h3>${esc(META[s-1][0])} Sûresi</h3><div class="small muted">Ayete git</div><div class="row" style="margin-top:12px"><input id="jv" type="number" inputmode="numeric" min="1" max="${META[s-1][3]}" placeholder="1 – ${META[s-1][3]}"><button class="btn pri" id="jg">Git</button></div>`,el=>{
+    const go=()=>{const v=+el.querySelector('#jv').value;if(v>=1&&v<=META[s-1][3]){closeSheet();const a=document.getElementById(`a${s}-${v}`);a.scrollIntoView({block:'start'});a.classList.remove('flash');void a.offsetWidth;a.classList.add('flash')}else toast('Geçersiz ayet')};
+    el.querySelector('#jg').onclick=go;el.querySelector('#jv').onkeydown=e=>{if(e.key==='Enter')go()};setTimeout(()=>el.querySelector('#jv').focus(),100)});
+}
+
+/* ---------- notes ---------- */
+let NF={q:'',color:'all',tag:null};
+async function renderNotes(){
+  setTab('notes');
+  view.innerHTML='<div class="loading">Yükleniyor…</div>';
+  await Promise.all([...new Set(S.hl.map(h=>h.meal))].map(ensure)).catch(()=>{});
+  if(tab!=='notes')return;
+  view.innerHTML=`<div class="pad"><h1>Notlarım</h1>
+  <input id="nq" placeholder="Notlarda ve vurgularda ara" value="${esc(NF.q)}" autocomplete="off">
+  <div class="chips" id="nc" style="margin-top:12px"></div><div class="chips" id="nt" style="margin-top:8px"></div>
+  <div class="row" style="margin-top:12px"><span class="small muted grow" id="ncount"></span><select id="ns" style="width:auto;padding:6px 10px"><option value="mushaf">Mushaf sırası</option><option value="new">En yeni</option></select><button class="btn" id="ncopy" style="padding:7px 10px">Kopyala</button></div>
+  <div id="nl"></div></div>`;
+  $('#ns').value=S.sort;
+  $('#nq').oninput=e=>{NF.q=e.target.value;drawNotes()};
+  $('#ns').onchange=e=>{S.sort=e.target.value;saveSoon();drawNotes()};
+  $('#ncopy').onclick=()=>{const l=filtered();if(!l.length)return toast('Kopyalanacak not yok');copy(l.map(h=>`${ref(h.s,h.v)} (${MS[h.meal]})\n“${hText(h)}”${h.note?`\nNot: ${h.note}`:''}${h.tags&&h.tags.length?`\n${h.tags.map(t=>'#'+t).join(' ')}`:''}`).join('\n\n'))};
+  drawNotes();
+}
+const hText=h=>D[h.meal]?D[h.meal][h.s-1][h.v-1].slice(h.a,h.b):'';
+function filtered(){const q=norm(NF.q);let l=S.hl.filter(h=>{
+  if(NF.color==='note'&&!h.note)return false;if(COLORS.includes(NF.color)&&h.color!==NF.color)return false;if(NF.tag&&!(h.tags||[]).includes(NF.tag))return false;
+  if(q&&!norm(hText(h)+' '+(h.note||'')+' '+(h.tags||[]).join(' ')+' '+META[h.s-1][0]).includes(q))return false;return true});
+  l.sort(S.sort==='new'?(a,b)=>(b.u||b.c)-(a.u||a.c):(a,b)=>a.s-b.s||a.v-b.v||a.a-b.a);return l}
+function drawNotes(){
+  const cnt={all:S.hl.length,note:S.hl.filter(h=>h.note).length};COLORS.forEach(c=>cnt[c]=S.hl.filter(h=>h.color===c).length);
+  $('#nc').innerHTML=[['all','Tümü'],['note','Notlu'],...COLORS.map(c=>[c,CNAME[c]])].map(([k,n])=>`<button class="chip${NF.color===k?' on':''}" data-k="${k}">${COLORS.includes(k)?`<span class="dot" style="background:var(--hl-${k});border:1px solid var(--line)"></span>`:''}${n} <span class="muted" style="${NF.color===k?'color:inherit;opacity:.8':''}">${cnt[k]}</span></button>`).join('');
+  const tg=allTags();$('#nt').innerHTML=tg.map(t=>`<button class="chip${NF.tag===t?' on':''}" data-t="${esc(t)}">#${esc(t)}</button>`).join('');$('#nt').style.display=tg.length?'flex':'none';
+  $('#nc').onclick=e=>{const b=e.target.closest('[data-k]');if(b){NF.color=b.dataset.k;drawNotes()}};
+  $('#nt').onclick=e=>{const b=e.target.closest('[data-t]');if(b){NF.tag=NF.tag===b.dataset.t?null:b.dataset.t;drawNotes()}};
+  const l=filtered();$('#ncount').textContent=`${l.length} kayıt`;
+  $('#nl').innerHTML=l.length?l.map(h=>`<div class="note-item" data-id="${h.id}"><div class="ref"><span class="dot" style="background:${h.color?`var(--hl-${h.color})`:'transparent'};border:1px solid var(--line)"></span>${esc(ref(h.s,h.v)).toUpperCase()} <span class="muted" style="font-weight:400">· ${MS[h.meal]}</span></div>
+    <div class="ex"><mark class="hl c-${h.color||'none'}">${esc(hText(h))}</mark></div>${h.note?`<div class="nt">${esc(h.note)}</div>`:''}${h.tags&&h.tags.length?`<div>${h.tags.map(t=>`<span class="tag">#${esc(t)}</span>`).join('')}</div>`:''}</div>`).join('')
+    :`<div class="empty">${S.hl.length?'Bu filtreye uyan kayıt yok.':'Henüz vurgu ya da not yok.<br>Okurken bir ayete dokun ya da metni seçip renk seç.'}</div>`;
+  $('#nl').onclick=e=>{const it=e.target.closest('.note-item');if(it)editSheet(it.dataset.id)};
+}
+
+/* ---------- search ---------- */
+const NM={'â':'a','î':'i','û':'u','ô':'o','Â':'a','Î':'i','Û':'u','İ':'i','I':'ı','’':"'",'‘':"'"};
+function norm(s){let o='';for(const ch of s){const m=NM[ch];o+=m!==undefined?m:ch.toLowerCase()[0]}return o}
+let SQ={q:'',meals:null};
+function renderSearch(){
+  setTab('search');if(!SQ.meals)SQ.meals=[...S.settings.meals];
+  view.innerHTML=`<div class="pad"><h1>Mealde Ara</h1><div class="row"><input id="sq" placeholder="Kelime veya ifade (ör. sabır)" value="${esc(SQ.q)}" autocomplete="off" enterkeyhint="search"><button class="btn pri" id="sgo">Ara</button></div>
+  <div class="chips" id="sm" style="margin-top:12px">${Object.keys(MEALS).map(k=>`<button class="chip${SQ.meals.includes(k)?' on':''}" data-k="${k}">${MS[k]}</button>`).join('')}</div>
+  <div id="sr" style="margin-top:8px"></div></div>`;
+  $('#sm').onclick=e=>{const b=e.target.closest('[data-k]');if(!b)return;const k=b.dataset.k;SQ.meals=SQ.meals.includes(k)?SQ.meals.filter(x=>x!==k):[...SQ.meals,k];if(!SQ.meals.length)SQ.meals=[k];b.parentNode.querySelectorAll('.chip').forEach(c=>c.classList.toggle('on',SQ.meals.includes(c.dataset.k)));if(SQ.q)runSearch()};
+  $('#sgo').onclick=runSearch;$('#sq').onkeydown=e=>{if(e.key==='Enter'){$('#sq').blur();runSearch()}};
+  if(SQ.q)runSearch();else setTimeout(()=>$('#sq').focus(),50);
+}
+async function runSearch(){
+  const q=$('#sq').value.trim();SQ.q=q;const out=$('#sr');if(norm(q).length<2){out.innerHTML='<div class="empty">En az 2 harf yaz.</div>';return}
+  out.innerHTML='<div class="loading">Aranıyor…</div>';
+  await Promise.all(SQ.meals.map(ensure));
+  const n=norm(q),res=[];let total=0;
+  for(const k of SQ.meals)for(let s=0;s<114;s++)D[k][s].forEach((t,vi)=>{const nt=norm(t),i=nt.indexOf(n);if(i>=0){total++;if(res.length<300)res.push({k,s:s+1,v:vi+1,t,i})}});
+  res.sort((a,b)=>a.s-b.s||a.v-b.v);
+  out.innerHTML=`<div class="small muted" style="padding:8px 0">${total} sonuç${total>300?' (ilk 300 gösteriliyor)':''}</div>`+res.map(r=>{const a=Math.max(0,r.i-90),b=Math.min(r.t.length,r.i+n.length+130);
+    return `<div class="res" data-s="${r.s}" data-v="${r.v}"><div class="small" style="color:var(--accent);font-weight:600">${esc(ref(r.s,r.v))} <span class="muted" style="font-weight:400">· ${MS[r.k]}</span></div><div class="ex">${a?'…':''}${esc(r.t.slice(a,r.i))}<b>${esc(r.t.slice(r.i,r.i+n.length))}</b>${esc(r.t.slice(r.i+n.length,b))}${b<r.t.length?'…':''}</div></div>`}).join('');
+  out.onclick=e=>{const r=e.target.closest('.res');if(r)openReader(+r.dataset.s,+r.dataset.v,true)};
+}
+
+/* ---------- settings ---------- */
+let DL=null;const NATIVE_DL=!window.claude;
+try{if(window.claude&&claude.use)claude.use('downloads').then(d=>{DL=d;if(tab==='settings')renderSettings()}).catch(()=>{})}catch(e){}
+function renderSettings(){
+  setTab('settings');const st=S.settings;
+  const mealRows=Object.keys(MEALS).map(k=>{const on=st.meals.includes(k),pri=st.meals[0]===k;return `<div class="mealrow"><button class="cb${on?' on':''}" data-m="${k}">${on?'✓':''}</button><div class="grow">${MEALS[k]}${pri?' <span class="tag">Ana meal</span>':''}</div>${on&&!pri?`<button class="btn" data-p="${k}" style="padding:6px 10px;font-size:12px">Ana yap</button>`:''}</div>`}).join('');
+  view.innerHTML=`<div class="pad"><h1>Ayarlar</h1>
+  <h2>Görünüm</h2>
+  <div class="seg" id="th">${[['sepia','Sepya'],['light','Açık'],['dark','Gece']].map(([k,n])=>`<button data-k="${k}" class="${st.theme===k?'on':''}">${n}</button>`).join('')}</div>
+  <div class="setrow"><span>Yazı boyutu</span><div class="stepper"><button data-st="fs" data-d="-1">−</button><span>${st.fs}</span><button data-st="fs" data-d="1">+</button></div></div>
+  <div class="setrow"><span>Satır aralığı</span><div class="stepper"><button data-st="lh" data-d="-0.1">−</button><span>${st.lh.toFixed(1)}</span><button data-st="lh" data-d="0.1">+</button></div></div>
+  <div class="setrow"><span>Yazı tipi</span><div class="seg" id="ff" style="width:170px"><button data-k="serif" class="${st.family==='serif'?'on':''}">Kitap</button><button data-k="sans" class="${st.family==='sans'?'on':''}">Sade</button></div></div>
+  <div class="setrow"><span>Arapça metni göster</span><button class="switch${st.arabic?' on':''}" id="arT"></button></div>
+  ${st.arabic?`<div class="setrow"><span>Arapça boyutu</span><div class="stepper"><button data-st="ar" data-d="-2">−</button><span>${st.ar}</span><button data-st="ar" data-d="2">+</button></div></div>`:''}
+  <div class="setrow"><span>Okunuşu göster <span class="small muted">(Türk harfleriyle)</span></span><button class="switch${st.translit?' on':''}" id="okT"></button></div>
+  <div class="card" style="margin-top:12px"><p class="tr" style="margin:0"><span class="vn">1</span>Rahmân ve Rahîm olan Allah'ın adıyla</p></div>
+  <h2>Mealler</h2><div class="small muted">Birden fazla seçersen her ayetin altında karşılaştırmalı görünür. Ana meal büyük yazılır ve tüm ayet vurguları onda yapılır.</div>${mealRows}
+  <h2>Yedek</h2>
+  <div class="small muted" style="margin-bottom:10px">Notların bu telefondaki tarayıcıda saklanıyor. Tarayıcı verisi silinirse kaybolur; ara sıra yedek al.${S.lastBackup?` Son yedek: ${new Date(S.lastBackup).toLocaleDateString('tr-TR')}.`:' Henüz yedek alınmadı.'}</div>
+  <div class="row wrap">${DL||NATIVE_DL?'<button class="btn pri" id="bDl">Yedek dosyası indir</button>':''}<button class="btn${DL||NATIVE_DL?'':' pri'}" id="bCp">Yedeği panoya kopyala</button><button class="btn" id="bIn">Yedeği geri yükle</button></div>
+  <input type="file" id="bFile" accept=".json,application/json,text/plain" style="display:none">
+  <h2>Okuma takibi</h2>
+  <div class="row wrap"><button class="btn" id="hNew">Yeni hatime başla</button><span class="small muted">Okunan ayet işaretlerini sıfırlar${S.hatim?` · Tamamlanan: ${S.hatim}`:''}</span></div>
+  <h2>Kaynak</h2><div class="small muted" style="line-height:1.6">Arapça metin ve mealler Tanzil.net, Türkçe okunuş qurandatabase.org kaynaklıdır (Diyanet İşleri, Elmalılı Hamdi Yazır, Süleyman Ateş, Ali Bulaç). Meal metinleri değiştirilmeden gösterilir.</div>
+  <div style="height:30px"></div></div>`;
+  $('#th').onclick=e=>{const b=e.target.closest('[data-k]');if(b){st.theme=b.dataset.k;applyLook();save();renderSettings()}};
+  $('#ff').onclick=e=>{const b=e.target.closest('[data-k]');if(b){st.family=b.dataset.k;applyLook();save();renderSettings()}};
+  view.querySelectorAll('[data-st]').forEach(b=>b.onclick=()=>{const k=b.dataset.st,d=+b.dataset.d,lim={fs:[14,32],lh:[1.3,2.2],ar:[18,40]}[k];st[k]=Math.round(Math.min(lim[1],Math.max(lim[0],st[k]+d))*10)/10;applyLook();save();renderSettings()});
+  $('#okT').onclick=()=>{st.translit=!st.translit;if(st.translit)ensure('okunus');save();renderSettings()};
+  $('#arT').onclick=()=>{st.arabic=!st.arabic;if(st.arabic)ensure('ar');save();renderSettings()};
+  view.querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>{const k=b.dataset.m;if(st.meals.includes(k)){if(st.meals.length===1)return toast('En az bir meal seçili olmalı');st.meals=st.meals.filter(x=>x!==k)}else{st.meals.push(k);ensure(k)}save();SQ.meals=null;renderSettings()});
+  view.querySelectorAll('[data-p]').forEach(b=>b.onclick=()=>{const k=b.dataset.p;st.meals=[k,...st.meals.filter(x=>x!==k)];save();renderSettings()});
+  const backup=()=>JSON.stringify({app:'meal-okuyucu',version:1,exported:new Date().toISOString(),hl:S.hl.map(({_new,...h})=>h),read:b64e(READ),last:S.last,hatim:S.hatim,settings:S.settings});
+  if(!DL&&NATIVE_DL)$('#bDl').onclick=()=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([backup()],{type:'application/json'}));a.download=`meal-notlarim-${new Date().toISOString().slice(0,10)}.json`;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},1000);S.lastBackup=Date.now();save();renderSettings();toast('Yedek indirildi')};
+  if(DL)$('#bDl').onclick=async()=>{try{await DL.save({filename:`meal-notlarim-${new Date().toISOString().slice(0,10)}.json`,data:backup()});S.lastBackup=Date.now();save();renderSettings();toast('Yedek kaydedildi')}catch(e){toast('İndirme iptal edildi')}};
+  $('#bCp').onclick=async()=>{try{await navigator.clipboard.writeText(backup());S.lastBackup=Date.now();save();toast('Yedek panoya kopyalandı — Notlar\'a ya da kendine mesaj olarak yapıştır')}catch(e){toast('Kopyalanamadı')}};
+  $('#bIn').onclick=importSheet;
+  $('#bFile').onchange=async e=>{const f=e.target.files[0];if(f){const t=await f.text();closeSheet();doImport(t)}e.target.value=''};
+  $('#hNew').onclick=()=>sheet(`<h3>Yeni hatime başla</h3><p class="small muted">Okundu işaretleri sıfırlanır, notların ve vurguların kalır.${countRead()>=TOTAL*.95?' Hatim sayın 1 artar.':''}</p><div class="row"><span class="grow"></span><button class="btn" id="cx">Vazgeç</button><button class="btn pri" id="ok">Sıfırla</button></div>`,el=>{
+    el.querySelector('#cx').onclick=closeSheet;el.querySelector('#ok').onclick=()=>{if(countRead()>=TOTAL*.95)S.hatim++;READ=new Uint8Array(Math.ceil(TOTAL/8));S.last={s:1,v:1};save();closeSheet();renderSettings();toast('Yeni hatim başladı')}});
+}
+function importSheet(){
+  sheet(`<h3>Yedeği geri yükle</h3><p class="small muted">Yedek dosyasını seç ya da kopyaladığın yedek metnini yapıştır. Mevcut notlarınla birleştirilir, aynı kayıtlar çiftlenmez.</p>
+  <button class="btn" id="pick" style="width:100%">Dosya seç</button><textarea id="pt" placeholder="…veya yedek metnini buraya yapıştır" style="margin-top:10px;font-family:monospace;font-size:12px"></textarea>
+  <div class="row" style="margin-top:12px"><span class="grow"></span><button class="btn pri" id="pi">Yükle</button></div>`,el=>{
+    el.querySelector('#pick').onclick=()=>$('#bFile').click();
+    el.querySelector('#pi').onclick=()=>{const t=el.querySelector('#pt').value.trim();if(!t)return toast('Önce yedek metnini yapıştır');closeSheet();doImport(t)}});
+}
+function doImport(t){
+  try{const o=JSON.parse(t);if(!o||!Array.isArray(o.hl))throw 0;
+    const ids=new Set(S.hl.map(h=>h.id));let n=0;o.hl.forEach(h=>{if(h&&h.id&&h.s&&h.v&&MEALS[h.meal]&&!ids.has(h.id)){S.hl.push(h);n++}});
+    if(o.read){const r=b64d(o.read);for(let i=0;i<READ.length;i++)READ[i]|=r[i]}
+    if(o.hatim>S.hatim)S.hatim=o.hatim;save();toast(`${n} yeni kayıt eklendi`);if(tab==='settings')renderSettings()}
+  catch(e){toast('Bu geçerli bir yedek değil')}
+}
+
+/* ---------- boot ---------- */
+(async()=>{
+  load();applyLook();
+  try{META=await ensure('meta')}catch(e){view.innerHTML='<div class="loading">Veri yüklenemedi. Sayfayı yenile.</div>';return}
+  let o=0;META.forEach(m=>{OFFS.push(o);o+=m[3]});
+  S.settings.meals=S.settings.meals.filter(k=>MEALS[k]);if(!S.settings.meals.length)S.settings.meals=['diyanet'];
+  S.settings.meals.forEach(ensure);if(S.settings.arabic)ensure('ar');if(S.settings.translit)ensure('okunus');
+  renderLibrary();
+  if('serviceWorker' in navigator&&NATIVE_DL&&location.protocol==='https:')navigator.serviceWorker.register('sw.js').catch(()=>{});
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,10 @@
+MEAL – GitHub Pages kurulumu
+1) github.com'da yeni bir repo aç (ör. "meal"), Public seç.
+2) "Add file > Upload files" ile bu klasördeki TÜM dosya ve klasörleri yükle (index.html en üstte olmalı).
+3) Settings > Pages > Branch: main, klasör: / (root) > Save.
+4) 1-2 dk sonra adres: https://KULLANICIADIN.github.io/meal/
+5) Telefonda bu adresi aç:
+   iPhone: Safari > Paylaş > Ana Ekrana Ekle
+   Android: Chrome > ⋮ > Uygulamayı yükle / Ana ekrana ekle
+İlk açılışta tüm mealler telefona iner; sonra internetsiz çalışır.
+Güncelleme yaparsan sw.js içindeki 'meal-v1' değerini 'meal-v2' yap.
