@@ -3,6 +3,7 @@
   "short_name": "Meal",
   "description": "Kindle tarzı Kur'an meali okuyucu: vurgula, not al, ara.",
   "lang": "tr",
+  "id": "./",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
