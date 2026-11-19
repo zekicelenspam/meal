@@ -6,8 +6,8 @@
 <title>Meal</title>
 <meta name="theme-color" content="#1f4d3a">
 <link rel="manifest" href="manifest.json">
-<link rel="icon" href="icons/icon-192.png">
-<link rel="apple-touch-icon" href="icons/icon-180.png">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Meal">
@@ -169,7 +169,7 @@ const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',
 const arDig=n=>String(n).replace(/\d/g,d=>'٠١٢٣٤٥٦٧٨٩'[d]);
 let META=null, OFFS=[];
 const PROM={}, D={};
-function ensure(n){ if(!PROM[n]) PROM[n]=fetch('data/'+n+'.json').then(r=>{if(!r.ok)throw new Error(n);return r.json()}).then(j=>(D[n]=j)); return PROM[n]; }
+function ensure(n){ if(!PROM[n]) PROM[n]=fetch(n+'.json').then(r=>{if(!r.ok)throw new Error(n);return r.json()}).then(j=>(D[n]=j)); return PROM[n]; }
 
 /* ---------- state ---------- */
 let S={settings:{meals:['diyanet'],arabic:false,translit:false,theme:'sepia',fs:20,lh:1.75,ar:26,family:'serif'},hl:[],read:'',last:{s:1,v:1},hatim:0,lastBackup:null,sort:'mushaf'};

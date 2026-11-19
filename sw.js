@@ -1,6 +1,6 @@
-const V='meal-v1';
-const CORE=['./','index.html','manifest.json','icons/icon-192.png','icons/icon-512.png','icons/icon-180.png',
- 'data/meta.json','data/diyanet.json','data/elmalili.json','data/ates.json','data/bulac.json','data/ar.json','data/okunus.json'];
+const V='meal-v2';
+const CORE=['./','index.html','manifest.json','icon-192.png','icon-512.png','icon-180.png',
+ 'meta.json','diyanet.json','elmalili.json','ates.json','bulac.json','ar.json','okunus.json'];
 self.addEventListener('install',e=>{e.waitUntil(caches.open(V).then(c=>c.addAll(CORE)).then(()=>self.skipWaiting()))});
 self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==V).map(k=>caches.delete(k)))).then(()=>self.clients.claim()))});
 self.addEventListener('fetch',e=>{
